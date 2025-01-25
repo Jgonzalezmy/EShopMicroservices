@@ -1,5 +1,3 @@
-
-
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
 
@@ -8,16 +6,12 @@ var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssemblies(assembly);
-
-    //Config validation behavior
-    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>)); //Config validation behavior   
+    config.AddOpenBehavior(typeof(LogginBehavior<,>)); //Config loggin behavior
 });
 
-//Add service Carter - minimal APIs
-builder.Services.AddCarterWithAssemblies(assembly);
-
-//Add service Fluent validation
-builder.Services.AddValidatorsFromAssembly(assembly);
+builder.Services.AddCarterWithAssemblies(assembly); //Add service Carter - minimal APIs
+builder.Services.AddValidatorsFromAssembly(assembly); //Add service Fluent validation
 
 //Marten configuration
 builder.Services.AddMarten(options =>
@@ -25,8 +19,15 @@ builder.Services.AddMarten(options =>
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
-//Exception Handler
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>(); //Exception Handler
+
+builder.Services.AddHealthChecks() //Healhchecks
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
+
 
 var app = builder.Build();
 
@@ -35,5 +36,10 @@ app.MapCarter();
 
 app.UseExceptionHandler(options => { });
 
+app.UseHealthChecks("/health", //Use checkHealt in JSON Format
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 
 app.Run();
