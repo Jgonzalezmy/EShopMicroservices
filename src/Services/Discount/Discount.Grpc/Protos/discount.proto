@@ -21,7 +21,7 @@ message CouponModel{
 	int32 id = 1;
 	string producName = 2;
 	string description = 3;
-	string amount = 4;
+	int32 amount = 4;
 }
 
 message CreateDiscountRequest{
@@ -33,9 +33,9 @@ message UpdateDiscountRequest{
 }
 
 message DeleteDiscountRequest{
-	CouponModel producName = 1;
+	string producName = 1;
 }
 
 message DeleteDiscountResponse{
-	CouponModel success = 1;
+	bool success = 1;
 }

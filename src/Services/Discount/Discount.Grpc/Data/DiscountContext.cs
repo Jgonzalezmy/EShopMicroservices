@@ -17,8 +17,6 @@ namespace Discount.Grpc.Data
             modelBuilder.Entity<Coupon>().HasData(
                     new Coupon { Id = 1, ProducName = "Iphone X", Description = "Iphone Discount", Amount = 150 },
                     new Coupon { Id = 2, ProducName = "Samsung 10", Description = "Samsung Discount", Amount = 100 }
-
-
                 );
 
             base.OnModelCreating(modelBuilder);
