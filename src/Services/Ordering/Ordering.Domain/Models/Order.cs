@@ -30,7 +30,7 @@
                 Status = OrderStatus.Pending
             };
 
-            order.AddDomainEvents(new OrderCreateEvent(order));
+            order.AddDomainEvents(new OrderCreatedEvent(order));
 
             return order;
         }
@@ -44,7 +44,7 @@
             Payment = payment;
             Status = status;
 
-            AddDomainEvents(new OrderUpdateEvent(this));
+            AddDomainEvents(new OrderUpdatedEvent(this));
 
         }
 

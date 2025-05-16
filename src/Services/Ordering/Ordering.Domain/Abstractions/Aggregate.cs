@@ -5,7 +5,12 @@
         private readonly List<IDomainEvent> _domainEvents = new();
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-        public IDomainEvent[] AddDomainEvents()
+        public void AddDomainEvents(IDomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
+        public IDomainEvent[] ClearDomainEvents()
         {
             IDomainEvent[] dequeueEvents = _domainEvents.ToArray();
             _domainEvents.Clear();
